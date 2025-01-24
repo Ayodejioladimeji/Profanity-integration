@@ -1,14 +1,15 @@
 // src/types/settings.ts
 
 export interface ProfanitySettings {
-  customProfaneWords: string[];
+  customProfaneWords: string;
   sensitivity: number; // Range 1-5
   maskingStyle: "asterisks" | "dashes" | "partial";
   actionOnDetection: "flag" | "block" | "replace";
   caseSensitivity: boolean;
   logProfaneMessages: boolean;
-  notificationOnDetection: boolean;
+  notificationOnDetection: string;
   languageFilter: string[];
   whitelistedUsers: string[];
   maxProfanityCount: number;
+  webhookUrl: string;
 }

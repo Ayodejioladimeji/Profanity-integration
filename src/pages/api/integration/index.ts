@@ -100,9 +100,18 @@ export default async function handler(
           },
           {
             label: "notificationOnDetection",
-            type: "checkbox",
+            type: "dropdown",
+            options: ["Yes", "No"],
             description: "Notify admins when a profane message is detected.",
             default: "No",
+            required: true,
+          },
+          {
+            label: "WebhookUrl",
+            type: "text",
+            description:
+              "Specify the webhook url of the channel to notify admin",
+            default: "https://my-webhook-url.com",
             required: true,
           },
           {
