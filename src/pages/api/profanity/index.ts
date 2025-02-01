@@ -52,12 +52,6 @@ const getProfanity = async (req: NextApiRequest, res: NextApiResponse) => {
         .json({ error: "Message content and settings are required" });
     }
 
-    const errors = validateSettings(settings);
-
-    if (errors.length > 0) {
-      return res.status(400).json({ error: "Type validation errors" });
-    }
-
     // Process profanity check
     const { modifiedText } = checkProfanity(message_content?.message, settings);
 

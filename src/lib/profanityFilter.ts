@@ -52,39 +52,52 @@ const sendWebhookNotification = async (webhookUrl: string, message: string) => {
 // Main profanity check function
 export const checkProfanity = (
   text: string,
-  settings: ProfanitySettings
+  settings: any
 ): { containsProfanity: boolean; modifiedText: string } => {
   let containsProfanity = false;
   let modifiedText = text;
 
-  // Ensure customProfaneWords is an array, and split it if necessary
-  const profaneWords = Array.isArray(settings.customProfaneWords)
-    ? settings.customProfaneWords
-    : settings.customProfaneWords?.split(",") || [];
+  // Helper function to get setting values by label
+  const getSettingValue = (label: string) =>
+    settings.find((s: any) => s.label === label)?.default;
+
+  // Extracting settings values correctly
+  const profaneWords =
+    typeof getSettingValue("customProfaneWords") === "string"
+      ? getSettingValue("customProfaneWords")
+          ?.split(",")
+          .map((w) => w.trim()) || []
+      : getSettingValue("customProfaneWords") || [];
+
+  const caseSensitivity = getSettingValue("caseSensitivity") as boolean;
+  const maskingStyle = getSettingValue("maskingStyle") as string;
+  const actionOnDetection = getSettingValue("actionOnDetection") as string;
+  const notificationOnDetection = getSettingValue(
+    "notificationOnDetection"
+  ) as string;
+  const webhookUrl = getSettingValue("WebhookUrl") as string;
+  const maxProfanityCount = getSettingValue("maxProfanityCount") as number;
 
   let profanityCount = 0;
 
   // Loop through each profane word and check the text
-  profaneWords.forEach((word) => {
-    const regex = new RegExp(
-      `\\b${word.trim()}\\b`,
-      settings.caseSensitivity ? "g" : "gi"
-    );
+  profaneWords.forEach((word: any) => {
+    const regex = new RegExp(`\\b${word}\\b`, caseSensitivity ? "g" : "gi");
     if (regex.test(text)) {
       containsProfanity = true;
       modifiedText = modifiedText.replace(
         regex,
-        maskProfaneWord(word.trim(), settings.maskingStyle)
+        maskProfaneWord(word, maskingStyle)
       );
       profanityCount += 1;
     }
   });
 
   // Check max profanity count and trigger action if needed
-  if (profanityCount >= settings.maxProfanityCount) {
-    if (settings.actionOnDetection === "block") {
+  if (profanityCount >= maxProfanityCount) {
+    if (actionOnDetection === "block") {
       modifiedText = "Message blocked due to too many profane words.";
-    } else if (settings.actionOnDetection === "replace") {
+    } else if (actionOnDetection === "replace") {
       modifiedText = modifiedText.replace(
         new RegExp("\\w+", "g"),
         "[REDACTED]"
@@ -93,11 +106,8 @@ export const checkProfanity = (
   }
 
   // If notification is required, send a webhook
-  if (containsProfanity && settings.notificationOnDetection === "Yes") {
-    sendWebhookNotification(
-      settings.webhookUrl,
-      "Profanity detected in a message."
-    );
+  if (containsProfanity && notificationOnDetection === "Yes") {
+    sendWebhookNotification(webhookUrl, "Profanity detected in a message.");
   }
 
   return { containsProfanity, modifiedText };

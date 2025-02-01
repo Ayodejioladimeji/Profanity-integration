@@ -1,14 +1,12 @@
 // src/types/settings.ts
 
-export interface ProfanitySettings {
-  customProfaneWords: string;
-  maskingStyle: "asterisks" | "dashes" | "partial";
-  actionOnDetection: "flag" | "block" | "replace";
-  caseSensitivity: boolean;
-  logProfaneMessages: boolean;
-  notificationOnDetection: string;
-  languageFilter: string[];
-  whitelistedUsers: string[];
-  maxProfanityCount: number;
-  webhookUrl: string;
+export interface ProfanitySettingItem {
+  label: string;
+  type: "text" | "multi-select" | "dropdown" | "checkbox" | "number";
+  description: string;
+  required?: boolean;
+  default: string | number | boolean | string[];
+  options?: string[];
 }
+
+export type ProfanitySettings = ProfanitySettingItem[];
