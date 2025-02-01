@@ -60,7 +60,7 @@ export const checkProfanity = (
   // Ensure customProfaneWords is an array, and split it if necessary
   const profaneWords = Array.isArray(settings.customProfaneWords)
     ? settings.customProfaneWords
-    : settings.customProfaneWords?.split(",") || []; // Split if it's a comma-separated string
+    : settings.customProfaneWords?.split(",") || [];
 
   let profanityCount = 0;
 

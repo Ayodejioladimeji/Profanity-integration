@@ -47,10 +47,11 @@ export default async function handler(
           app_logo:
             "https://res.cloudinary.com/devsource/image/upload/v1737510989/pngtree-no-cursing-sign-png-image_6610915_meqkww.png",
           app_name: "Profanity Checker",
-          app_url: "https://profanity-checker-omega.vercel.app/api/profanity",
+          app_url: "https://profanity-checker-omega.vercel.app/api/integration",
           background_color: "#ffffff",
         },
         is_active: false,
+        integration_type: "modifier",
         key_features: [
           "Monitor and filter out offensive language from messages in real-time.",
           "Notify admins when offensive language is detected.",
@@ -74,13 +75,14 @@ export default async function handler(
             description: "Select custom profane words to track.",
             required: true,
             default:
-              "fuck,shit,ass,bastard,bitch,dick,cock,pussy,damn,crap,cunt,motherfucker,asshole,douche,prick,slut,whore,jerk,twat,bollocks,bugger,wanker,piss,arse,shag,tosser,bloody,git,dickhead,tit,skank,scumbag,numbnuts,dipshit,faggot,dyke,queer,tranny,chode,knob,arsehole,bellend,munter,pillock,gobshite,shite,wazzock,nobhead,knobjockey,fanny,flaps,minge,plonker,shagger,bint,twit,numpty,arsewipe,buttmunch,dumbass,fucktard,shithead,wankstain,turd,fuckwit,moron,dipstick,scrote,dildo,jerkoff,knackers,numbnut,plonker,prat,pissflaps,shitfaced,tosspot,twatface,wank,cockwomble,shithole,arsebandit,fucknuts,cumdumpster,assmunch,bitchtits,fuckhole,shitbag,clit,ballsack,cumstain,anus,crackhead,dickweed,shitty,pissflap,gash,jizz,dickwad,fuckstick,shitbird,shitcunt,cockgoblin,douchebag,clusterfuck,twatsack",
+              "fuck,shit,ass,bastard,bitch,dick,cock,pussy,damn,fucking,motherfucker,asshole,prick,dumbass,fucktard,shithead",
           },
           {
-            label: "sensitivity",
-            type: "number",
-            description: "Adjust profanity detection sensitivity (1-5).",
-            default: 3,
+            label: "caseSensitivity",
+            type: "checkbox",
+            description:
+              "Enable case-sensitive profanity detection. If checked, 'Fuck' and 'fuck' will be treated differently.",
+            default: false,
           },
           {
             label: "maskingStyle",

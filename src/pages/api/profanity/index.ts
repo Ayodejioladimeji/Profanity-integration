@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { checkProfanity } from "@/lib/profanityFilter";
 import { ProfanitySettings } from "@/types/settings";
 import Cors from "cors";
+import { validateSettings } from "./../../../lib/validate-strings";
 
 // Configure CORS
 const cors = Cors({
@@ -36,24 +37,35 @@ const getProfanity = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     await runMiddleware(req, res, cors);
 
-    const { text, settings }: { text: string; settings: ProfanitySettings } =
-      req.body;
+    const {
+      message_content,
+      settings,
+    }: { message_content: any; settings: ProfanitySettings } = req.body;
 
-    if (!text || !settings) {
-      return res.status(400).json({ error: "Text and settings are required" });
+    if (
+      !message_content?.event_name ||
+      !message_content?.message ||
+      !settings
+    ) {
+      return res
+        .status(400)
+        .json({ error: "Message content and settings are required" });
+    }
+
+    const errors = validateSettings(settings);
+
+    if (errors.length > 0) {
+      return res.status(400).json({ error: "Type validation errors" });
     }
 
     // Process profanity check
-    const { containsProfanity, modifiedText } = checkProfanity(text, settings);
+    const { modifiedText } = checkProfanity(message_content?.message, settings);
 
     return res.status(200).json({
-      originalText: text,
-      modifiedText,
-      containsProfanity,
-      action: settings.actionOnDetection,
-      message: containsProfanity
-        ? "Profane words detected."
-        : "No profanity detected.",
+      event_name: message_content?.event_name,
+      status: message_content?.status,
+      message: modifiedText,
+      username: message_content?.username,
     });
   } catch (error) {
     console.error("Error processing request:", error);
