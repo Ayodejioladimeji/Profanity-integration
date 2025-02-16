@@ -1,5 +1,6 @@
-import { ProfanitySettings } from "@/types/settings";
 import axios from "axios";
+
+/* eslint-disable */
 
 // Mask profane words based on the chosen style
 const maskProfaneWord = (word: string, style: string): string => {

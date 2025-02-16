@@ -66,7 +66,8 @@ export default async function handler(
             "Integrate with chat platforms like Slack and Teams for seamless filtering.",
           ],
         },
-        author: "Layobright Company",
+        author: "Layobright",
+        integration_category:"Communication & Collaboration",
         website: "https://profanity-checkers.vercel.app",
         settings: [
           {

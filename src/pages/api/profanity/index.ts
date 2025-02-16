@@ -2,7 +2,6 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { checkProfanity } from "@/lib/profanityFilter";
 import { ProfanitySettings } from "@/types/settings";
 import Cors from "cors";
-import { validateSettings } from "./../../../lib/validate-strings";
 
 // Configure CORS
 const cors = Cors({
@@ -38,13 +37,12 @@ const getProfanity = async (req: NextApiRequest, res: NextApiResponse) => {
     await runMiddleware(req, res, cors);
 
     const {
-      message_content,
+      message,
       settings,
-    }: { message_content: any; settings: ProfanitySettings } = req.body;
+    }: { message: any; settings: ProfanitySettings } = req.body;
 
     if (
-      !message_content?.event_name ||
-      !message_content?.message ||
+      !message ||
       !settings
     ) {
       return res
@@ -53,13 +51,12 @@ const getProfanity = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     // Process profanity check
-    const { modifiedText } = checkProfanity(message_content?.message, settings);
+    const { modifiedText, containsProfanity } = checkProfanity(message, settings);
 
     return res.status(200).json({
-      event_name: message_content?.event_name,
-      status: message_content?.status,
+      originalText: message,
       message: modifiedText,
-      username: message_content?.username,
+      containsProfanity
     });
   } catch (error) {
     console.error("Error processing request:", error);
