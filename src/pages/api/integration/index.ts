@@ -36,6 +36,10 @@ export default async function handler(
   if (req.method === "GET") {
     await runMiddleware(req, res, cors);
 
+    if (process.env.NEXT_PUBLIC_BREAK_SITE === 'true') {
+      throw new Error('Intentional downtime for testing');
+    }
+
     return res.status(200).json({
       data: {
         date: {
