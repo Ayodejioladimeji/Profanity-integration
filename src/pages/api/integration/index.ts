@@ -56,6 +56,7 @@ export default async function handler(
         },
         is_active: false,
         integration_type: "modifier",
+        integration_category:"Communication & Collaboration",
         key_features: [
           "Monitor and filter out offensive language from messages in real-time.",
           "Notify admins when offensive language is detected.",
@@ -71,7 +72,6 @@ export default async function handler(
           ],
         },
         author: "Layobright",
-        integration_category:"Communication & Collaboration",
         website: "https://profanity-checkers.vercel.app",
         settings: [
           {
